@@ -42,7 +42,7 @@ basic role class
         if random.randint(1, 10000) < self.hitting_accuracy * 100:
             role.under_attack(causer=self, damage=damage)
 
-    def under_attack(self, causer, damage, fire=0,is_skill_attack=False):
+    def under_attack(self, causer, damage, fire=0, is_skill_attack=False):
         """self under attack, cause blood reducing
          @:param causer: who cause the damage
          @:param damage: physical damage
@@ -59,10 +59,11 @@ basic role class
 
 class JiZi(Role):
     """
-    姬子
+    JiZi
     """
     def __init__(self):
-        super().__init__(23, 9, 12, '姬子', 1)
+        super().__init__(23, 9, 12, 'JiZi', 1)
+        self.has_runed_skill1 = False
 
     def attack(self, role, curr_round):
         """self attack role
@@ -80,7 +81,8 @@ class JiZi(Role):
         if counter with role which has more than 1 members, double the basic arrow
         @:param role: the person self counter with
         """
-        if role.role_member > 1:
+        if role.role_member > 1 and not self.has_runed_skill1:
+            self.has_runed_skill1 = True
             self.arrow *= 2
 
     def cheer_friends(self, current_round):
@@ -90,15 +92,15 @@ class JiZi(Role):
         """
         if current_round % 2 == 0:
             self.arrow *= 2
-            self.hitting_accuracy *= 0.35
+            self.hitting_accuracy *= 0.65
 
 
 class DuYa(Role):
     """
-    渡鸦
+    DuYa
     """
     def __init__(self):
-        super().__init__(23, 14, 14, '渡鸦', 1)
+        super().__init__(23, 14, 14, 'DuYa', 1)
 
     def attack(self, role, current_round):
         super(DuYa, self).attack(role, current_round)
@@ -113,7 +115,7 @@ class DuYa(Role):
         cause 25% damage more on kiana, and other roles has 25% possibility to enhance basic damage
         @:param role: my enemy
         """
-        if role.name0 == "琪亚娜":
+        if role.name0 == "Kiana":
             self.arrow *= 1.25
         else:
             if random.randint(1, 10000) < 2500:
@@ -135,10 +137,10 @@ class DuYa(Role):
 
 class YingLianZu(Role):
     """
-    樱莲组
+    YingLianZu
     """
     def __init__(self):
-        super().__init__(20, 9, 18, '樱莲组', 2)
+        super().__init__(20, 9, 18, 'YingLianZu', 2)
 
     def attack(self, role, current_round):
         super(YingLianZu, self).attack(role, current_round)
@@ -168,10 +170,10 @@ class YingLianZu(Role):
 
 class DeLiSha(Role):
     """
-    德莉莎
+    DeLiSha
     """
     def __init__(self):
-        super().__init__(19, 12, 22, '德莉莎', 3)
+        super().__init__(19, 12, 22, 'DeLiSha', 3)
 
     def attack(self, role, current_round):
         super(DeLiSha, self).attack(role,current_round)
@@ -182,15 +184,15 @@ class DeLiSha(Role):
                 self.blood_judas_cutest(role)
 
     def blood_judas_cutest(self, role):
-        """skill1：not aim at you
-        cause 25% damage more on kiana, and other roles has 25% possibility to enhance basic damage
+        """skill1：blood_judas_cutest
+        30% possibility to reduce role's shield 5 points
         @:param role: my enemy
         """
         if random.randint(1, 10000) < 3000:
             role.shield -= 5
 
     def online_kicker(self, current_round, role):
-        """skill2：my villa island
+        """skill2：online_kicker
         happens every 3 rounds, get my enemy 16 damages 5 times
         @:param current_round: current round
         @:param role: my enemy
@@ -200,15 +202,15 @@ class DeLiSha(Role):
             # here I consider about the effect of hit rate
             for _ in range(5):
                 if random.randint(1, 10000) < self.hitting_accuracy * 100:
-                    role.under_attack(causer=self,damage=damage,is_skill_attack=True)
+                    role.under_attack(causer=self, damage=damage, is_skill_attack=True)
 
 
 class YaYi(Role):
     """
-    芽衣
+    YaYi
     """
     def __init__(self):
-        super().__init__(22, 12, 30, '芽衣', 1)
+        super().__init__(22, 12, 30, 'YaYi', 1)
 
     def attack(self, role, current_round):
         super(YaYi, self).attack(role, current_round)
@@ -238,10 +240,10 @@ class YaYi(Role):
 
 class Kiana(Role):
     """
-    琪亚娜
+    Kiana
     """
     def __init__(self):
-        super().__init__(24, 11, 23, '琪亚娜', 1)
+        super().__init__(24, 11, 23, 'Kiana', 1)
 
     def attack(self, role, current_round):
         super(Kiana, self).attack(role, current_round)
@@ -270,33 +272,43 @@ class Kiana(Role):
 
 class Alin(Role):
     """
-    阿琳姐妹
+    Alin
     """
     def __init__(self):
-        super().__init__(18, 10, 10, '阿琳姐妹', 2)
+        super().__init__(18, 10, 10, 'Alin', 2)
         self.revitalization = True
+        self.one_super_attack = True
 
     def attack(self, role, current_round):
-        if self.blood < 0:
-            self.life_water()
-            if self.blood > 0:
-                self.become_star(role)
-            return
-        if not self.not_fainting:
-            self.not_fainting = True
-            return
-        if self.charmed_counts > 0:
-            self.charmed_counts -= 1
-            self.normal_attack(role)
-            return
+        super(Alin, self).attack(role, current_round)
         if self.not_numbness and self.charmed_counts <= 0:
-            self.normal_attack(role)
+            if not self.revitalization and self.one_super_attack:
+                self.become_star(role)
+            else:
+                self.normal_attack(role)
+
+    def under_attack(self, causer, damage, fire=0, is_skill_attack=False):
+        """self under attack, cause blood reducing
+         @:param causer: who cause the damage
+         @:param damage: physical damage
+         @:param fire: element damage
+         @:param is_skill_attack: is it from a skill
+        """
+        damage = damage - self.shield
+        if damage <= 0:
+            damage = 0
+        if fire <= 0:
+            fire = 0
+        self.blood = self.blood - damage - fire
+        if self.blood < 0 and self.revitalization:
+            self.blood = 20
+            self.revitalization = False
 
     def life_water(self):
         """skill1：life_water
         not die if blood less than 0, and become 20 blood
         """
-        if self.blood < 0:
+        if self.blood < 0 and self.revitalization:
             self.blood = 20
             self.revitalization = False
 
@@ -314,10 +326,10 @@ class Alin(Role):
 
 class Durandel(Role):
     """
-    幽兰黛尔
+    Durandel
     """
     def __init__(self):
-        super().__init__(19, 10, 15, '幽兰黛尔', 1)
+        super().__init__(19, 10, 15, 'Durandel', 1)
 
     def attack(self, role, current_round):
         super(Durandel, self).attack(role, current_round)
@@ -351,10 +363,10 @@ class Durandel(Role):
 
 class LiTa(Role):
     """
-    丽塔
+    LiTa
     """
     def __init__(self):
-        super().__init__(26, 11, 17, '丽塔', 1)
+        super().__init__(26, 11, 17, 'LiTa', 1)
         self.perfect_mind_done = False
 
     def attack(self, role, current_round):
@@ -373,7 +385,7 @@ class LiTa(Role):
             role.under_attack(causer=self, damage=self.arrow - 3, is_skill_attack=True)
             role.arrow -= 4
         else:
-            role.normal_attack(self.arrow)
+            role.normal_attack(role)
 
     def perfect_mind(self, role, current_round):
         """skill2：perfect_mind
@@ -406,10 +418,10 @@ class LiTa(Role):
 
 class Buronia(Role):
     """
-    布洛妮娅
+    Buronia
     """
     def __init__(self):
-        super().__init__(21, 10, 20, '布洛妮娅', 1)
+        super().__init__(21, 10, 20, 'Buronia', 1)
 
     def attack(self, role, current_round):
         super(Buronia, self).attack(role, current_round)
@@ -442,10 +454,10 @@ class Buronia(Role):
 
 class FuHua(Role):
     """
-    符华
+    FuHua
     """
     def __init__(self):
-        super().__init__(17, 15, 16, '符华', 1)
+        super().__init__(17, 15, 16, 'FuHua', 1)
 
     def attack(self, role, current_round):
         super(FuHua, self).attack(role, current_round)
@@ -474,10 +486,10 @@ class FuHua(Role):
 
 class XiEr(Role):
     """
-    希儿
+    XiEr
     """
     def __init__(self):
-        super().__init__(23, 13, 26, '希儿', 1)
+        super().__init__(23, 13, 26, 'XiEr', 1)
         self.state = "white"
 
     def attack(self, role, current_round):
