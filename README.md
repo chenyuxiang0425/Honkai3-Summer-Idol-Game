@@ -1,5 +1,26 @@
-# 2020崩坏3-夏日竞猜活动模拟：
+# 2020崩坏3-夏日竞猜活动模拟
 
+## 简介
+2020崩坏3-夏日竞猜活动模拟
+- `roles.py` 角色属性
+- `simulation.py` 模拟帮助函数
+- `main.py` 主程序
+## 结果
+![result](./result.png)
+
+## 环境依赖
+- pandas
+
+## 使用方法
+安装模块：
+```shell script
+$ pip install -r requirments.txt
+```
+运行：
+```shell script
+$ python main.py
+```
+尚不排除计算错误的可能
 
 ## 目前完成
 - 琪亚娜 (Kiana)
@@ -14,14 +35,3 @@
 - 希儿 (XiEr)
 - 幽兰戴尔 (Durandel)
 - 符华 (FuHua)
-
-
-
-## 使用方法
- 更改simulatioon.py里redict_winner()函数
-
-~~~python
-role1 = roles.()
-role2 = roles.liTa()
-~~~
-尚不排除计算错误的可能
