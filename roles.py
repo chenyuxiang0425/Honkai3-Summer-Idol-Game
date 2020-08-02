@@ -2,7 +2,7 @@
 import math
 import random
 
-class role(object):
+class Role(object):
     blood = 100     
     arrow = 0       
     shield = 0      
@@ -26,7 +26,7 @@ class role(object):
         """
         damage = self.arrow - role.shield
         if (random.randint(1, 10000) < self.hitting_accuracy * 100):
-            role.onAttack(damage)
+            role.under_attack(damage)
 
     def under_attack(self, damage, fire = 0):
         """self under attack, cause blood reducing
@@ -41,22 +41,22 @@ class role(object):
 
 
 #姬子子类 
-class jiZi(role):
-    def __init__(self, num):
+class JiZi(Role):
+    def __init__(self):
         super().__init__(23, 9, 12, '姬子', 1)
 
     def attack(self, role,rounds):
         """self attack role
         """
-        love_never_die(role)
-        cheer_friends(rounds)
-        normal_attack(role)
+        self.love_never_die(role)
+        self.cheer_friends(rounds)
+        self.normal_attack(role)
 
     def can_attack(self):
         """ tell whether self can attack
         TODO
         """
-        reutrn True
+        return true
 
     def love_never_die(self,role):
         """skill1：love never die
@@ -77,14 +77,14 @@ class jiZi(role):
 
 
 #渡鸦子类 
-class duYa(role):
-    def __init__(self, num):
+class DuYa(Role):
+    def __init__(self):
         super().__init__(23, 14, 14, '渡鸦', 1)
 
-    def attack(self, role):
-        not_aim_at_you(role)
-        my_villa_island(current_round,role)
-        normal_attack(role)
+    def attack(self, role,current_round):
+        self.not_aim_at_you(role)
+        self.my_villa_island(current_round,role)
+        self.normal_attack(role)
 
     def not_aim_at_you(self,role):
         """skill1：not aim at you
@@ -93,7 +93,7 @@ class duYa(role):
         if role.name0 == "kiana":
             self.arrow *= 1.25
         else:
-            if (random.randint(1, 10000) < 2500):
+            if random.randint(1, 10000) < 2500:
                 self.arrow *= 1.25
 
     def my_villa_island(self,current_round,role):
@@ -103,8 +103,8 @@ class duYa(role):
         if current_round % 3 == 0:
             damage = 16 - role.shield
             # here I consider about the effect of hit rate
-            if (random.randint(1, 10000) < self.hitting_accuracy * 100): 
-                role.onAttack(damage)
+            if random.randint(1, 10000) < self.hitting_accuracy * 100:
+                role.under_attack(damage)
 
 
 # #class lilia:可怜的剑圣已经被淘汰了，就不写了==
