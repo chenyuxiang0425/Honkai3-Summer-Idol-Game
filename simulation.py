@@ -7,7 +7,8 @@ def is_fight_ended(role1, role2):
     @:param role2: another role
     :return true if any of them's blood down to zero
     """
-    return (role1.blood < 1 or role2.blood < 1) and role1.revitalization is False and role2.revitalization is False
+
+    return (role1.blood < 1 and role1.revitalization is False) or (role2.revitalization is False and role2.blood < 1)
 
 
 def get_winner(role1, role2):
@@ -48,17 +49,16 @@ def fight(role1, role2):
     return winner.name0
 
 
-def redict_winner(fight_times=100000):
+def redict_winner(role1, role2, fight_times=100000):
     """two roles fight, return a dictionary of battle history
     @:param role1: one role
     @:param role2: another role
     :return winner's name
     """
+
     win_times = {}
     for _ in range(fight_times):
-        role1 = roles.DeLiSha()
-        role2 = roles.YingLianZu()
-        winner = fight(role1, role2)
+        winner = fight(role1(), role2())
         if not winner in win_times:
             win_times[winner] = 1
         else:
