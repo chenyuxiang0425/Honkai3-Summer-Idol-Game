@@ -2,6 +2,7 @@
 import math
 import random
 
+
 class Role(object):
     """
     basic role class
@@ -44,8 +45,10 @@ class Role(object):
         self.blood = self.blood - damage - fire
 
 
-#姬子子类 
 class JiZi(Role):
+    """
+    姬子
+    """
     def __init__(self):
         super().__init__(23, 9, 12, '姬子', 1)
 
@@ -62,7 +65,7 @@ class JiZi(Role):
         """ tell whether I can attack
         TODO
         """
-        return true
+        return True
 
     def love_never_die(self,role):
         """skill1：love never die
@@ -82,8 +85,10 @@ class JiZi(Role):
             self.hitting_accuracy *= 0.35
 
 
-#渡鸦子类 
 class DuYa(Role):
+    """
+    渡鸦
+    """
     def __init__(self):
         super().__init__(23, 14, 14, '渡鸦', 1)
 
@@ -108,13 +113,77 @@ class DuYa(Role):
         happens every 3 rounds, get my enemy 16 damages 7 times
         @:param current_round: current round
         @:param role: my enemy
-
         """
         if current_round % 3 == 0:
             damage = 16 - role.shield
             # here I consider about the effect of hit rate
-            if random.randint(1, 10000) < self.hitting_accuracy * 100:
-                role.under_attack(damage)
+            for _ in range(7):
+                if random.randint(1, 10000) < self.hitting_accuracy * 100:
+                    role.under_attack(damage)
+
+
+class YingLianZu(Role):
+    """
+    樱莲组
+    """
+    def __init__(self):
+        super().__init__(20, 9, 18, '樱莲组', 2)
+
+    def attack(self, role,current_round):
+        self.sakura_rice_cakes()
+        self.kallen_rice_cakes(current_round,role)
+        self.normal_attack(role)
+
+    def sakura_rice_cakes(self):
+        """skill1：not aim at you
+        cause 25% damage more on kiana, and other roles has 25% possibility to enhance basic damage
+        @:param role: my enemy
+        """
+        if random.randint(1, 10000) < 3000:
+            self.blood += 25
+
+    def kallen_rice_cakes(self,current_round,role):
+        """skill2：my villa island
+        happens every 3 rounds, get my enemy 16 damages 7 times
+        @:param current_round: current round
+        @:param role: my enemy
+        """
+        if current_round % 2 == 0:
+            role.under_attack(0, 25)
+
+class DeLiSha(Role):
+    """
+    德莉莎
+    """
+    def __init__(self):
+        super().__init__(19, 12, 22, '德莉莎', 3)
+
+    def attack(self, role,current_round):
+        self.online_kicker(current_round,role)
+        self.normal_attack(role)
+        self.blood_judas_cutest(role)
+
+    def blood_judas_cutest(self,role):
+        """skill1：not aim at you
+        cause 25% damage more on kiana, and other roles has 25% possibility to enhance basic damage
+        @:param role: my enemy
+        """
+        if random.randint(1, 10000) < 3000:
+            role.shield -= 5
+
+    def online_kicker(self,current_round,role):
+        """skill2：my villa island
+        happens every 3 rounds, get my enemy 16 damages 5 times
+        @:param current_round: current round
+        @:param role: my enemy
+        """
+        if current_round % 3 == 0:
+            damage = 16 - role.shield
+            # here I consider about the effect of hit rate
+            for _ in range(5):
+                if random.randint(1, 10000) < self.hitting_accuracy * 100:
+                    role.under_attack(damage)
+
 
 
 # #class lilia:可怜的剑圣已经被淘汰了，就不写了==
