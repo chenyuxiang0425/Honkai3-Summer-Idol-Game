@@ -1,4 +1,4 @@
-import sim
+import simulation
 def main():
     for _ in range(5):
         print_redict_winner(roles.JiZi(), roles.DuYa())
