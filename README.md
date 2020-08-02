@@ -6,7 +6,7 @@
 - `simulation.py` 模拟帮助函数
 - `main.py` 主程序
 ## 结果
-![result](./result.png)
+![result](./new_result.png)
 
 ## 环境依赖
 - pandas
