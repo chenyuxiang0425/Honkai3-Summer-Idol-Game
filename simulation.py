@@ -29,19 +29,19 @@ def fight(role1, role2):
     :return winner's name
     """
     winner = "None"
-    currend_round = 0
-    fast_role,slow_role = role1,role2
-    if role1.speed < role2.speed: # make sure the fastest is the first role to attack
-        fast_role,slow_role = role2,role1
+    current_round = 0
+    fast_role, slow_role = role1, role2
+    if role1.speed < role2.speed:  # make sure the fastest is the first role to attack
+        fast_role, slow_role = role2, role1
 
     while winner == "None":
         fast_role.not_numbness, slow_role.not_numbness = True, True
-        currend_round += 1
-        fast_role.attack(slow_role,currend_round)
+        current_round += 1
+        fast_role.attack(slow_role, current_round)
         if is_fight_ended(fast_role, slow_role):
             winner = get_winner(fast_role, slow_role)
             break
-        slow_role.attack(fast_role, currend_round)
+        slow_role.attack(fast_role, current_round)
         if is_fight_ended(fast_role, slow_role):
             winner = get_winner(fast_role, slow_role)
             break
@@ -56,15 +56,14 @@ def redict_winner(fight_times=100000):
     """
     win_times = {}
     for _ in range(fight_times):
-        role1 = roles.Alin()
-        role2 = roles.Kiana()
+        role1 = roles.DeLiSha()
+        role2 = roles.YingLianZu()
         winner = fight(role1, role2)
         if not winner in win_times:
             win_times[winner] = 1
         else:
             win_times[winner] += 1
     return win_times
-
 
 # #打印战报的战斗函数
 # def fightRe(role1, role2):
