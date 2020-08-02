@@ -3,6 +3,10 @@ import math
 import random
 
 class Role(object):
+    """
+    basic role class
+
+    """
     blood = 100     
     arrow = 0       
     shield = 0      
@@ -22,16 +26,16 @@ class Role(object):
 
     def normal_attack(self, role):
         """normal attack which has been considered of hit rate
-        @param role: the role to be attacked
+         @:param role: the role to be attacked
         """
         damage = self.arrow - role.shield
-        if (random.randint(1, 10000) < self.hitting_accuracy * 100):
+        if random.randint(1, 10000) < self.hitting_accuracy * 100:
             role.under_attack(damage)
 
     def under_attack(self, damage, fire = 0):
         """self under attack, cause blood reducing
-        @param damage: physical damage 
-        @param fire: element damage
+         @:param damage: physical damage
+         @:param fire: element damage
         """
         if damage <= 0:
             damage = 0
@@ -45,15 +49,17 @@ class JiZi(Role):
     def __init__(self):
         super().__init__(23, 9, 12, '姬子', 1)
 
-    def attack(self, role,rounds):
+    def attack(self, role, curr_round):
         """self attack role
+         @:param role: the role will be attacked
+         @:param curr_round: current round
         """
         self.love_never_die(role)
-        self.cheer_friends(rounds)
+        self.cheer_friends(curr_round)
         self.normal_attack(role)
 
     def can_attack(self):
-        """ tell whether self can attack
+        """ tell whether I can attack
         TODO
         """
         return true
@@ -61,7 +67,7 @@ class JiZi(Role):
     def love_never_die(self,role):
         """skill1：love never die
         if counter with role which has more than 1 members, double the basic arrow
-        @param role: the person self counter with
+        @:param role: the person self counter with
         """
         if role.role_member > 1:
             self.arrow *= 2
@@ -69,7 +75,7 @@ class JiZi(Role):
     def cheer_friends(self,current_round):
         """skill2：cheer friends
         happens every 2 rounds, double self arrow but base hit rate reduced by 35%
-        @ parma rounds: current round
+        @:param current_round: current round
         """
         if current_round % 2 == 0:
             self.arrow *= 2
@@ -89,8 +95,9 @@ class DuYa(Role):
     def not_aim_at_you(self,role):
         """skill1：not aim at you
         cause 25% damage more on kiana, and other roles has 25% possibility to enhance basic damage
+        @:param role: my enemy
         """
-        if role.name0 == "kiana":
+        if role.name0 == "琪亚娜":
             self.arrow *= 1.25
         else:
             if random.randint(1, 10000) < 2500:
@@ -98,7 +105,10 @@ class DuYa(Role):
 
     def my_villa_island(self,current_round,role):
         """skill2：my villa island
-        每3回合发动一次，给予对方七次16点伤害
+        happens every 3 rounds, get my enemy 16 damages 7 times
+        @:param current_round: current round
+        @:param role: my enemy
+
         """
         if current_round % 3 == 0:
             damage = 16 - role.shield
