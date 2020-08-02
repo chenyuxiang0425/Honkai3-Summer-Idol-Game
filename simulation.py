@@ -1,12 +1,14 @@
 import roles
 
+
 def is_fight_ended(role1, role2):
     """if role1 or role2's blood down to zero, the fight is end
     @:param role1: one role
     @:param role2: another role
     :return true if any of them's blood down to zero
     """
-    return role1.blood < 1 or role2.blood < 1
+    return (role1.blood < 1 or role2.blood < 1) and role1.revitalization is False and role2.revitalization is False
+
 
 def get_winner(role1, role2):
     """if role1 or role2's blood down to zero, the other role is winner
@@ -18,6 +20,7 @@ def get_winner(role1, role2):
         return role2
     if role2.blood < 1:
         return role1
+
 
 def fight(role1, role2):
     """two roles fight, return the name of winner
@@ -32,18 +35,20 @@ def fight(role1, role2):
         fast_role,slow_role = role2,role1
 
     while winner == "None":
+        fast_role.not_numbness, slow_role.not_numbness = True, True
         currend_round += 1
         fast_role.attack(slow_role,currend_round)
         if is_fight_ended(fast_role, slow_role):
             winner = get_winner(fast_role, slow_role)
             break
-        slow_role.attack(fast_role,currend_round)
+        slow_role.attack(fast_role, currend_round)
         if is_fight_ended(fast_role, slow_role):
             winner = get_winner(fast_role, slow_role)
             break
     return winner.name0
 
-def redict_winner(role1,role2,fight_times=10000):
+
+def redict_winner(fight_times=100000):
     """two roles fight, return a dictionary of battle history
     @:param role1: one role
     @:param role2: another role
@@ -51,13 +56,14 @@ def redict_winner(role1,role2,fight_times=10000):
     """
     win_times = {}
     for _ in range(fight_times):
+        role1 = roles.Alin()
+        role2 = roles.Kiana()
         winner = fight(role1, role2)
         if not winner in win_times:
             win_times[winner] = 1
         else:
             win_times[winner] += 1
     return win_times
-
 
 
 # #打印战报的战斗函数
