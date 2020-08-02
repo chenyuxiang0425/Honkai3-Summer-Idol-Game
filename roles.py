@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-import math
 import random
 
 
 class Role(object):
     """
-    basic role class
-
+basic role class
     """
     blood = 100     
     arrow = 0       
@@ -14,10 +12,11 @@ class Role(object):
     speed = 0       
     name0 = ''      
     role_members_num = 0 
-    hitting_accuracy = 100 # hit rate
+    hitting_accuracy = 100  # hit rate
     not_numbness = True
     not_fainting = True
     revitalization = False
+    charmed_counts = 0
 
     def __init__(self, arrow, shield, speed, name0, role_member):
         self.arrow = arrow
@@ -30,22 +29,27 @@ class Role(object):
         if not self.not_fainting:
             self.not_fainting = True
             return
-        if self.not_numbness:
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
             self.normal_attack(role)
+            return
 
     def normal_attack(self, role):
         """normal attack which has been considered of hit rate
          @:param role: the role to be attacked
         """
-        damage = self.arrow - role.shield
+        damage = self.arrow
         if random.randint(1, 10000) < self.hitting_accuracy * 100:
-            role.under_attack(damage)
+            role.under_attack(causer=self, damage=damage)
 
-    def under_attack(self, damage, fire=0):
+    def under_attack(self, causer, damage, fire=0,is_skill_attack=False):
         """self under attack, cause blood reducing
+         @:param causer: who cause the damage
          @:param damage: physical damage
          @:param fire: element damage
+         @:param is_skill_attack: is it from a skill
         """
+        damage = damage - self.shield
         if damage <= 0:
             damage = 0
         if fire <= 0:
@@ -65,10 +69,8 @@ class JiZi(Role):
          @:param role: the role will be attacked
          @:param curr_round: current round
         """
-        if not self.not_fainting:
-            self.not_fainting = True
-            return
-        if self.not_numbness:
+        super(JiZi, self).attack(role, curr_round)
+        if self.not_numbness and self.charmed_counts <= 0:
             self.love_never_die(role)
             self.cheer_friends(curr_round)
             self.normal_attack(role)
@@ -99,10 +101,8 @@ class DuYa(Role):
         super().__init__(23, 14, 14, '渡鸦', 1)
 
     def attack(self, role, current_round):
-        if not self.not_fainting:
-            self.not_fainting = True
-            return
-        if self.not_numbness:
+        super(DuYa, self).attack(role, current_round)
+        if self.not_numbness and self.charmed_counts <= 0:
             self.not_aim_at_you(role)
             self.my_villa_island(current_round, role)
             if current_round % 3 != 0:
@@ -119,18 +119,18 @@ class DuYa(Role):
             if random.randint(1, 10000) < 2500:
                 self.arrow *= 1.25
 
-    def my_villa_island(self,current_round,role):
+    def my_villa_island(self, current_round, role):
         """skill2：my villa island
         happens every 3 rounds, get my enemy 16 damages 7 times
         @:param current_round: current round
         @:param role: my enemy
         """
         if current_round % 3 == 0:
-            damage = 16 - role.shield
+            damage = 16
             # here I consider about the effect of hit rate
             for _ in range(7):
                 if random.randint(1, 10000) < self.hitting_accuracy * 100:
-                    role.under_attack(damage)
+                    role.under_attack(causer=self,damage=damage,fire=0,is_skill_attack=True)
 
 
 class YingLianZu(Role):
@@ -141,10 +141,8 @@ class YingLianZu(Role):
         super().__init__(20, 9, 18, '樱莲组', 2)
 
     def attack(self, role, current_round):
-        if not self.not_fainting:
-            self.not_fainting = True
-            return
-        if self.not_numbness:
+        super(YingLianZu, self).attack(role, current_round)
+        if self.not_numbness and self.charmed_counts <= 0:
             self.sakura_rice_cakes()
             self.kallen_rice_cakes(current_round, role)
             if current_round % 2 != 0:
@@ -165,7 +163,7 @@ class YingLianZu(Role):
         @:param role: my enemy
         """
         if current_round % 2 == 0:
-            role.under_attack(0, 25)
+            role.under_attack(causer=self,damage=0, fire=25, is_skill_attack=True)
 
 
 class DeLiSha(Role):
@@ -176,10 +174,8 @@ class DeLiSha(Role):
         super().__init__(19, 12, 22, '德莉莎', 3)
 
     def attack(self, role, current_round):
-        if not self.not_fainting:
-            self.not_fainting = True
-            return
-        if self.not_numbness:
+        super(DeLiSha, self).attack(role,current_round)
+        if self.not_numbness and self.charmed_counts <= 0:
             self.online_kicker(current_round, role)
             if current_round % 3 != 0:
                 self.normal_attack(role)
@@ -200,24 +196,24 @@ class DeLiSha(Role):
         @:param role: my enemy
         """
         if current_round % 3 == 0:
-            damage = 16 - role.shield
+            damage = 16
             # here I consider about the effect of hit rate
             for _ in range(5):
                 if random.randint(1, 10000) < self.hitting_accuracy * 100:
-                    role.under_attack(damage)
+                    role.under_attack(causer=self,damage=damage,is_skill_attack=True)
 
 
-# 芽衣
 class YaYi(Role):
+    """
+    芽衣
+    """
     def __init__(self):
         super().__init__(22, 12, 30, '芽衣', 1)
 
     def attack(self, role, current_round):
-        if not self.not_fainting:
-            self.not_fainting = True
-            return
-        if self.not_numbness:
-            self.dragon_maid(current_round,role)
+        super(YaYi, self).attack(role, current_round)
+        if self.not_numbness and self.charmed_counts <= 0:
+            self.dragon_maid(current_round, role)
             if current_round % 2 != 0:
                 self.normal_attack(role)
                 self.singer_of_the_falling_world(role)
@@ -237,19 +233,19 @@ class YaYi(Role):
         """
         if current_round % 2 == 0:
             for _ in range(5):
-                role.under_attack(0, 3)
+                role.under_attack(causer=self,damage=0, fire=3,is_skill_attack=True)
 
 
-#琪亚娜
 class Kiana(Role):
+    """
+    琪亚娜
+    """
     def __init__(self):
         super().__init__(24, 11, 23, '琪亚娜', 1)
 
     def attack(self, role, current_round):
-        if not self.not_fainting:
-            self.not_fainting = True
-            return
-        if self.not_numbness:
+        super(Kiana, self).attack(role, current_round)
+        if self.not_numbness and self.charmed_counts <= 0:
             self.take_a_spear(current_round, role)
             if current_round % 2 != 0:
                 self.normal_attack(role)
@@ -261,7 +257,7 @@ class Kiana(Role):
         """
         if current_round % 2 == 0:
             damage = self.arrow + role.shield * 2
-            role.under_attack(damage)
+            role.under_attack(causer=self,damage=damage, is_skill_attack=True)
             self.too_load()
 
     def too_load(self):
@@ -272,8 +268,10 @@ class Kiana(Role):
             self.not_fainting = False
 
 
-#阿琳姐妹
 class Alin(Role):
+    """
+    阿琳姐妹
+    """
     def __init__(self):
         super().__init__(18, 10, 10, '阿琳姐妹', 2)
         self.revitalization = True
@@ -287,7 +285,11 @@ class Alin(Role):
         if not self.not_fainting:
             self.not_fainting = True
             return
-        if self.not_numbness:
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
+        if self.not_numbness and self.charmed_counts <= 0:
             self.normal_attack(role)
 
     def life_water(self):
@@ -305,168 +307,201 @@ class Alin(Role):
 
         """
         if random.randint(1, 10000) < 5000:
-            role.under_attack(233)
+            role.under_attack(causer=self,damage=233, is_skill_attack=True)
         else:
-            role.under_attack(50)
+            role.under_attack(causer=self,damage=50, is_skill_attack=True)
 
 
-# 幽兰戴尔
+class Durandel(Role):
+    """
+    幽兰黛尔
+    """
+    def __init__(self):
+        super().__init__(19, 10, 15, '幽兰黛尔', 1)
 
-# #丽塔子类 TODO
-# class liTa(role):
-#     #属性初始化
-#     def __init__(self, num):
-#         super().__init__(26, 11, 17, '丽塔')
+    def attack(self, role, current_round):
+        super(Durandel, self).attack(role, current_round)
+        if self.not_numbness and self.charmed_counts <= 0:
+            self.the_joy_of_fishing()
+            self.normal_attack(role)
 
-#     def attack(self, role):
-#         #没有被动技能，直接进行状态判断
-#         if self.block:
-#             self.block = False
-#             return '0，行动被封锁'
-#         if self.silent:
-#             self.silent = False
-#             return str(super().attack(role))+',沉默'
-        
-#         dam0=role.blood-role.onAttack(self, self.arrow-role.shield)
-#         #女仆的温柔清理
-#         if random.randint(1,10000)<=3500:
-#             self.blood+=dam0
-#             if self.blood>100:
-#                 self.blood=100
-#             #print('丽塔回血+',dam0)
-#         #封禁对方攻击的技能
-#         if random.randint(1,10000)>8000:
-#             role.block=True
-#             #print('丽塔使用了必杀，封锁了对手的进攻')
-#         return self.arrow-role.shield
+    def the_joy_of_fishing(self):
+        """skill1: the_joy_of_fishing
+        increase arrow 3 point every time before attack
+        """
+        self.arrow += 3
 
-
-# #符华子类 TODO
-# class fuHua(role):
-#     #charge是上仙的必杀技计数器
-#     #defence表示进入锁血状态
-#     def __init__(self, num):
-#         super().__init__(27, 8, 5, '符华')
-#         self.charge = 0
-#         self.defence = False
-
-#     def attack(self, role):
-#         #计数器+1，状态判定
-#         self.charge += 1
-#         if self.block:
-#             self.block = False
-#             return '0，行动被封锁'
-#         if self.silent:
-#             self.silent = False
-#             return str(super().attack(role))+',沉默'
-
-#         #每3个回合触发必杀技，随机10-30元素伤害
-#         if self.charge % 3 == 0:
-#             temp = random.randint(10, 30)
-#             #print('~赤鸢仙人发动必杀，随机元素伤害'+str(temp))
-#             role.onAttack(self, 0, temp)
-#             return temp
-#         #普通攻击
-#         role.onAttack(self, self.arrow-role.shield)
-#         return self.arrow-role.shield
-
-#     def onAttack(self, role, dam, fire=0):
-#         #锁血状态下免疫元素伤害
-#         if self.defence:
-#             if fire:
-#                 fire=0
-#                 #print('~赤鸢已过滤元素伤害')
-#             self.blood = self.blood-dam
-#             return self.blood
-#         #普通的受击判定
-#         self.blood = self.blood-dam-fire
-#         #受到致命伤害时开始锁血
-#         if self.blood < 1 and self.defence == False:
-#             #print('~符华开始锁血')
-#             self.defence = True
-#             self.blood = 1
-#         return self.blood
+    def under_attack(self, causer, damage, fire=0, is_skill_attack=False):
+        """skill2: 16% possibility to ignore enemy skills and cause her 30 damage
+        self under attack, cause blood reducing
+         @:param damage: physical damage
+         @:param fire: element damage
+        """
+        if is_skill_attack:
+            if random.randint(1, 10000) < 1600:
+                causer.blood -= 30
+        else:
+            damage = damage - self.shield
+            if damage <= 0:
+                damage = 0
+            if fire <= 0:
+                fire = 0
+            self.blood = self.blood - damage - fire
 
 
-# #布洛妮娅子类 TODO
-# class buronia(role):
-#     #charge是必杀技计数器
-#     def __init__(self, num):
-#         super().__init__(26, 8, 1, '布洛妮娅')
-#         self.charge = 0
+class LiTa(Role):
+    """
+    丽塔
+    """
+    def __init__(self):
+        super().__init__(26, 11, 17, '丽塔', 1)
+        self.perfect_mind_done = False
 
-#     def attack(self, role):
-#         #计数器增加，状态判定
-#         self.charge += 1
-#         if self.block:
-#             self.block = False
-#             return '0，行动被封锁'
-#         if self.silent:
-#             self.silent = False
-#             return super().attack(role)
-#         #普通攻击伤害计算
-#         dam0 = self.arrow-role.shield
-#         #每3个回合触发必杀技，随机造成1-100点物理伤害,伤害减对方防御
-#         if self.charge % 3 == 0:
-#             #print('~布洛妮娅必杀技发动')
-#             dam0=random.randint(1,100)-role.shield
-#             if dam0<0:
-#                 dam0=0
-#         role.onAttack(self,dam0)
-#         return dam0
-    
-#     def onAttack(self, role, dam, fire=0):
-#         #被动15%闪避攻击
-#         if random.randint(1,10000)<=1500:
-#             #print('~布洛妮娅触发了闪避')
-#             #只免疫物理攻击，无法免疫纯元素攻击
-#             if dam==0 and fire:
-#                 self.blood = self.blood-fire
-#             return self.blood
-#         #不触发闪避则正常结算
-#         self.blood = self.blood-dam-fire
-#         return self.blood
+    def attack(self, role, current_round):
+        super(LiTa, self).attack(role, current_round)
+        if self.not_numbness and self.charmed_counts <= 0:
+            self.perfect_mind(role, current_round)
+            if current_round % 4 != 0:
+                self.gentle_cleaning_of_maid(role)
 
+    def gentle_cleaning_of_maid(self, role):
+        """skill1：gentle_cleaning_of_maid
+        35% possibility to reduce current damage 3 points, and reduce enemy's arrow 4 points permanently
+        @:param role: my enemy
+        """
+        if random.randint(1, 10000) < 3500:
+            role.under_attack(causer=self, damage=self.arrow - 3, is_skill_attack=True)
+            role.arrow -= 4
+        else:
+            role.normal_attack(self.arrow)
 
+    def perfect_mind(self, role, current_round):
+        """skill2：perfect_mind
+        happens every 4 rounds, increase enemy 4 blood and make her charmed for 2 rounds which can not use skills
+        make her damage reduce 60% forever
+        @:param role: my enemy
+        @:param current_round: current round
+        """
+        if current_round % 4 == 0:
+            role.blood += 4
+            role.charmed_counts = 2
+            self.perfect_mind_done = True
 
-# #希儿子类 TODO
-# class xiEr(role):
-#     #属性初始化，charge是必杀技的计数器
-#     def __init__(self, num):
-#         super().__init__(23, 10, 5, '希儿')
-#         self.charge = 0
-
-#     def attack(self, role):
-#         #每次进攻，回合数加1，立即触发被动技能，
-#         # 随后判断当前是否被沉默，是否被封禁
-#         self.charge += 1
-#         #被动回血
-#         self.blood+=7
-#         if self.blood>100:
-#             self.blood=100
-#         #print('希儿回血+7')
-
-#         #状态判断
-#         if self.block:
-#             self.block = False
-#             return '0，行动被封锁'
-#             #如果被沉默，调用父类的攻击函数，即只进行普通攻击
-#         if self.silent:
-#             self.silent = False
-#             return str(super().attack(role))+',沉默'
-
-#         dam0 = self.arrow-role.shield
-#         #每4个回合触发必杀技
-#         if self.charge % 4 == 0:
-#             dam0 = (100-role.shield)
-#             if random.randint(1,10000)>2500:
-#                 dam0=0
-
-#         #计算好伤害值后，调用对方的onAttack函数进行伤害的结算，并便于触发对方的某些技能
-#         role.onAttack(self, dam0)
-#         if dam0:
-#             return dam0
-#         else:
-#             return '0,Miss!'
+    def under_attack(self, causer, damage, fire=0, is_skill_attack=False):
+        """self under attack, cause blood reducing
+        if perfect_mind has happened, the total damage reduce 60%
+         @:param damage: physical damage
+         @:param fire: element damage
+        """
+        damage = damage - self.shield
+        if damage <= 0:
+            damage = 0
+        if fire <= 0:
+            fire = 0
+        if self.perfect_mind_done:
+            self.blood = self.blood - (damage + fire) * (1 - 0.6)
+        else:
+            self.blood = self.blood - damage - fire
 
 
+class Buronia(Role):
+    """
+    布洛妮娅
+    """
+    def __init__(self):
+        super().__init__(21, 10, 20, '布洛妮娅', 1)
+
+    def attack(self, role, current_round):
+        super(Buronia, self).attack(role, current_round)
+        if self.not_numbness and self.charmed_counts <= 0:
+            self.angel_reconstruction(role)
+            self.motorcycle_visitors(role, current_round)
+            if current_round % 3 != 0:
+                self.normal_attack(role)
+
+    def angel_reconstruction(self, role):
+        """skill1 angel_reconstruction
+        after attack, 25% possibility to case 12 damage 4 times
+        @:param role: my enemy
+        """
+        if random.randint(1, 10000) < 2500:
+            damage = 12
+            for _ in range(4):
+                if random.randint(1, 10000) < self.hitting_accuracy * 100:
+                    role.under_attack(causer=self,damage=damage, is_skill_attack=True)
+
+    def motorcycle_visitors(self, role, current_round):
+        """skill2：motorcycle_visitors
+        happens every 3 rounds, cause element damage in 1~100
+        @:param role: my enemy
+        @:param current_round: current round
+        """
+        if current_round % 3 == 0:
+            role.under_attack(causer=self,damage=0, fire=random.randint(1, 100), is_skill_attack=True)
+
+
+class FuHua(Role):
+    """
+    符华
+    """
+    def __init__(self):
+        super().__init__(17, 15, 16, '符华', 1)
+
+    def attack(self, role, current_round):
+        super(FuHua, self).attack(role, current_round)
+        if self.not_numbness and self.charmed_counts <= 0:
+            self.pen_and_ink(role, current_round)
+            if current_round % 3 != 0:
+                self.normal_attack(role)
+
+    def normal_attack(self, role):
+        """skill1: FuHua's normal attack is element attack
+         @:param role: my enemy
+        """
+        fire = self.arrow
+        if random.randint(1, 10000) < self.hitting_accuracy * 100:
+            role.under_attack(causer=self, damage=0, fire=fire)
+
+    def pen_and_ink(self, role, current_round):
+        """skill2: pen_and_ink
+        happens every 3 rounds, 18 damage and reduce enemy's hit rate by 0.25
+         @:param role: my enemy
+        """
+        if current_round % 3 == 0:
+            role.under_attack(causer=self,damage=0, fire=18, is_skill_attack=True)
+            role.hitting_accuracy *= 0.25
+
+
+class XiEr(Role):
+    """
+    希儿
+    """
+    def __init__(self):
+        super().__init__(23, 13, 26, '希儿', 1)
+        self.state = "white"
+
+    def attack(self, role, current_round):
+        super(XiEr, self).attack(role, current_round)
+        if self.not_numbness and self.charmed_counts <= 0:
+            self.change_myself()
+            self.please_another_me()
+            self.normal_attack(role)
+
+    def change_myself(self):
+        """skill1:change myself
+        every time before attack,change my state
+        """
+        if self.state == "white":
+            self.state = "black"
+        else:
+            self.state = "white"
+
+    def please_another_me(self):
+        """skill2: please_another_me"""
+        if self.state == "white":
+            self.blood += random.randint(1, 15)
+            self.arrow -= 10
+            self.shield += 5
+        else:
+            self.arrow += 10
+            self.shield -= 5
