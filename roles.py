@@ -352,13 +352,13 @@ class Durandel(Role):
         if is_skill_attack:
             if random.randint(1, 10000) < 1600:
                 causer.blood -= 30
-        else:
-            damage = damage - self.shield
-            if damage <= 0:
-                damage = 0
-            if fire <= 0:
-                fire = 0
-            self.blood = self.blood - damage - fire
+                return
+        damage = damage - self.shield
+        if damage <= 0:
+            damage = 0
+        if fire <= 0:
+            fire = 0
+        self.blood = self.blood - damage - fire
 
 
 class LiTa(Role):
@@ -373,19 +373,18 @@ class LiTa(Role):
         super(LiTa, self).attack(role, current_round)
         if self.not_numbness and self.charmed_counts <= 0:
             self.perfect_mind(role, current_round)
-            if current_round % 4 != 0:
+            if current_round % 4 != 0 and random.randint(1, 10000) < 3500:
                 self.gentle_cleaning_of_maid(role)
+            else:
+                self.normal_attack(role)
 
     def gentle_cleaning_of_maid(self, role):
         """skill1：gentle_cleaning_of_maid
-        35% possibility to reduce current damage 3 points, and reduce enemy's arrow 4 points permanently
+        reduce current damage 3 points, and reduce enemy's arrow 4 points permanently
         @:param role: my enemy
         """
-        if random.randint(1, 10000) < 3500:
-            role.under_attack(causer=self, damage=self.arrow - 3, is_skill_attack=True)
-            role.arrow -= 4
-        else:
-            role.normal_attack(role)
+        role.under_attack(causer=self, damage=self.arrow - 3, is_skill_attack=True)
+        role.arrow -= 4
 
     def perfect_mind(self, role, current_round):
         """skill2：perfect_mind

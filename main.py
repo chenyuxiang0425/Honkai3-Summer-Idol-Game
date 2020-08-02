@@ -27,13 +27,11 @@ def main():
             fight_times = 10000
             if attacker == defender:
                 winning_probability[attacker].append(-1)
-            elif (attacker == 'LiTa' and defender == 'XiEr') or (attacker == 'XiEr' and defender == 'LiTa'):
-                winning_probability[attacker].append(-1)
             else:
                 winner_dict = simulation.redict_winner(attacker_class, defender_class, fight_times)
                 winning_probability.get(attacker).append(winner_dict.get(attacker, 0)/fight_times)
     print(winning_probability)
-    DataFrame(winning_probability).to_csv("C:\\Users\\cyx\\pythonProjects\\bbb_summerBet\\result.csv",index =False)
+    DataFrame(winning_probability).to_csv(".\\result.csv", index=False)
 
 
 def test_Alin_Jizi():
@@ -45,7 +43,7 @@ def test_Alin_Jizi():
 
 def test_LiTa_XiEr():
 
-    fight_times = 100
+    fight_times = 1000
     winner_dict = simulation.redict_winner(roles.LiTa, roles.XiEr, fight_times)
     # print(winning_probability)
     print(winner_dict)
