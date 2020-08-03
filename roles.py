@@ -284,6 +284,7 @@ class Alin(Role):
         if self.not_numbness and self.charmed_counts <= 0:
             if not self.revitalization and self.one_super_attack:
                 self.become_star(role)
+                self.one_super_attack = False
             else:
                 self.normal_attack(role)
 
