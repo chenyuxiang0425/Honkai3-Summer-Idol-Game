@@ -104,7 +104,13 @@ class DuYa(Role):
         self.passive_skill_has_happened = False
 
     def attack(self, role, current_round):
-        super(DuYa, self).attack(role, current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             self.not_aim_at_you(role)
             self.my_villa_island(current_round, role)
@@ -123,6 +129,7 @@ class DuYa(Role):
             else:
                 if random.randint(1, 10000) < 2500:
                     self.arrow *= 1.25
+            self.arrow = int(self.arrow)
 
     def my_villa_island(self, current_round, role):
         """skill2：my villa island
@@ -146,7 +153,13 @@ class YingLianZu(Role):
         super().__init__(20, 9, 18, 'YingLianZu', 2)
 
     def attack(self, role, current_round):
-        super(YingLianZu, self).attack(role, current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             self.sakura_rice_cakes()
             self.kallen_rice_cakes(current_round, role)
@@ -179,7 +192,13 @@ class DeLiSha(Role):
         super().__init__(19, 12, 22, 'DeLiSha', 3)
 
     def attack(self, role, current_round):
-        super(DeLiSha, self).attack(role,current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             self.online_kicker(current_round, role)
             if current_round % 3 != 0:
@@ -216,7 +235,13 @@ class YaYi(Role):
         super().__init__(22, 12, 30, 'YaYi', 1)
 
     def attack(self, role, current_round):
-        super(YaYi, self).attack(role, current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             self.dragon_maid(current_round, role)
             if current_round % 2 != 0:
@@ -249,7 +274,13 @@ class Kiana(Role):
         super().__init__(24, 11, 23, 'Kiana', 1)
 
     def attack(self, role, current_round):
-        super(Kiana, self).attack(role, current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             self.take_a_spear(current_round, role)
             if current_round % 2 != 0:
@@ -262,7 +293,7 @@ class Kiana(Role):
         """
         if current_round % 2 == 0:
             damage = self.arrow + role.shield * 2
-            role.under_attack(causer=self,damage=damage, is_skill_attack=True)
+            role.under_attack(causer=self, damage=damage, is_skill_attack=True)
             self.too_load()
 
     def too_load(self):
@@ -283,7 +314,13 @@ class Alin(Role):
         self.one_super_attack = True
 
     def attack(self, role, current_round):
-        super(Alin, self).attack(role, current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             if not self.revitalization and self.one_super_attack:
                 self.become_star(role)
@@ -336,7 +373,13 @@ class Durandel(Role):
         super().__init__(19, 10, 15, 'Durandel', 1)
 
     def attack(self, role, current_round):
-        super(Durandel, self).attack(role, current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             self.the_joy_of_fishing()
             self.normal_attack(role)
@@ -374,7 +417,13 @@ class LiTa(Role):
         self.perfect_mind_done = False
 
     def attack(self, role, current_round):
-        super(LiTa, self).attack(role, current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             self.perfect_mind(role, current_round)
             if current_round % 4 != 0 and random.randint(1, 10000) < 3500:
@@ -427,7 +476,13 @@ class Buronia(Role):
         super().__init__(21, 10, 20, 'Buronia', 1)
 
     def attack(self, role, current_round):
-        super(Buronia, self).attack(role, current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             self.angel_reconstruction(role)
             self.motorcycle_visitors(role, current_round)
@@ -463,7 +518,13 @@ class FuHua(Role):
         super().__init__(17, 15, 16, 'FuHua', 1)
 
     def attack(self, role, current_round):
-        super(FuHua, self).attack(role, current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             self.pen_and_ink(role, current_round)
             if current_round % 3 != 0:
@@ -496,7 +557,13 @@ class XiEr(Role):
         self.state = "white"
 
     def attack(self, role, current_round):
-        super(XiEr, self).attack(role, current_round)
+        if not self.not_fainting:
+            self.not_fainting = True
+            return
+        if self.charmed_counts > 0:
+            self.charmed_counts -= 1
+            self.normal_attack(role)
+            return
         if self.not_numbness and self.charmed_counts <= 0:
             self.change_myself()
             self.please_another_me()

@@ -6,9 +6,11 @@
 - `simulation.py` 模拟帮助函数
 - `main.py` 主程序
 ## 结果
-![result](./result.png)
+先看横轴再看纵轴，这儿阿琳姐妹打布洛妮娅的胜率是0.5038
+![result](./new_result.png)
 
 ## 环境依赖
+- numpy
 - pandas
 
 ## 使用方法

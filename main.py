@@ -49,6 +49,14 @@ def test_LiTa_XiEr():
     print(winner_dict)
 
 
+def test_DuYa_Kiana():
+
+    fight_times = 10000
+    winner_dict = simulation.redict_winner(roles.DuYa, roles.Kiana, fight_times)
+    # print(winning_probability)
+    print(winner_dict)
+
+
 if __name__ == '__main__':
     main()
 

@@ -1,5 +1,5 @@
 import roles
-
+debug = False
 
 def is_fight_ended(role1, role2):
     """if role1 or role2's blood down to zero, the fight is end
@@ -46,6 +46,10 @@ def fight(role1, role2):
         if is_fight_ended(fast_role, slow_role):
             winner = get_winner(fast_role, slow_role)
             break
+        if debug:
+            print("回合数 " + str(current_round) + " 结束 | " + slow_role.name0 + " HP " + str(slow_role.blood)+ " | " + fast_role.name0 + " HP " + str(fast_role.blood))
+    if debug:
+        print("winner is " + winner.name0)
     return winner.name0
 
 
