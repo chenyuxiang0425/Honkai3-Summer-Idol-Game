@@ -101,6 +101,7 @@ class DuYa(Role):
     """
     def __init__(self):
         super().__init__(23, 14, 14, 'DuYa', 1)
+        self.passive_skill_has_happened = False
 
     def attack(self, role, current_round):
         super(DuYa, self).attack(role, current_round)
@@ -115,11 +116,13 @@ class DuYa(Role):
         cause 25% damage more on kiana, and other roles has 25% possibility to enhance basic damage
         @:param role: my enemy
         """
-        if role.name0 == "Kiana":
-            self.arrow *= 1.25
-        else:
-            if random.randint(1, 10000) < 2500:
+        if not self.passive_skill_has_happened:
+            self.passive_skill_has_happened = True
+            if role.name0 == "Kiana":
                 self.arrow *= 1.25
+            else:
+                if random.randint(1, 10000) < 2500:
+                    self.arrow *= 1.25
 
     def my_villa_island(self, current_round, role):
         """skill2：my villa island
